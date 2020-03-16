@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import 'react-notifications/lib/notifications.css';
-
-import Login from './components/login'
-import Register from './components/register'
-import { Cinema } from './components/cinema'
+import { Provider } from 'react-redux'
+import Login from './login'
+import Register from './register'
+import { Cinema } from './cinema'
 
 import { NotificationContainer, NotificationManager } from 'react-notifications';
-import AuthService from './services/auth'
+import AuthService from '../services/auth'
 import {
   BrowserRouter as Router,
   Switch,
@@ -14,38 +14,39 @@ import {
   Link,
   Redirect
 } from "react-router-dom";
-import { Header } from './components/header';
-import { AuthRoute } from './components/common/authRoute'
+import { Header } from './header';
+import { AuthRoute } from './common/authRoute'
+import { Loading } from './common/loading'
+
+import store from '../store'
+import { LOGIN } from '../store/actions';
 
 function App() {
 
   const [loading, setLoading] = useState(true)
-  const [loggedIn, setLoggedIn] = useState(false)
+
+  const token = store.getState().userReducer.token
 
   useEffect(() => {
-    AuthService.status(window.localStorage.token).then((result) => {
-      window.localStorage.user = result.user.email
-      setLoggedIn(true)
+    AuthService.status(token).then((result) => {
+      store.dispatch({ type: LOGIN, data: { 
+        token: token,
+        profile: result.user
+      } })
     }).catch(e => {
       // NotificationManager.warn(e.message)
     }).finally(() => {
       setLoading(false)
     })
-
-    console.log('useEffect', window.localStorage.token)
   }, []) // odpala sie tylko raz
 
-  if (loading) return <div style={{
-    flexGrow: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }}><span>Loading...</span></div>
+  if (loading) return <Loading/>
 
   return (
     <div style={{ height: '100%' }}>
+      <Provider store={store}>
       <Router>
-        {!loggedIn && <Redirect to={'/login'} />}
+        {!token && <Redirect to={'/login'} />}
         <Header/>
         <Switch>
           <Route path='/login'>
@@ -59,6 +60,7 @@ function App() {
 
         <NotificationContainer />
       </Router>
+      </Provider>
     </div>
 
   );

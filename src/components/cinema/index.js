@@ -18,6 +18,8 @@ export const Cinema = () => {
     const [user, setUser] = useState('no user')
 
     useEffect(() => {
+
+        // @TODO change local storage with redux
         setUser(window.localStorage.user)
         console.log('cinema component', user)
     }, [])

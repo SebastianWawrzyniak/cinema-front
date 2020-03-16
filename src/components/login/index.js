@@ -50,7 +50,7 @@ export default class Login extends React.Component {
         }
 
         AuthService.login(email, password).then(res => {
-          // redirect to Cinema
+          // redirect to Cinema and @TODO change localstorage with redux
           window.localStorage.token = res.token
           window.localStorage.user = email
           this.setState({
