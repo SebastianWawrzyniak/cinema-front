@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'react-notifications/lib/notifications.css';
 import { Provider } from 'react-redux'
-import Login from './login'
+import {Login} from './login'
 import Register from './register'
 import { Cinema } from './cinema'
 
@@ -19,20 +19,17 @@ import { AuthRoute } from './common/authRoute'
 import { Loading } from './common/loading'
 
 import store from '../store'
-import { LOGIN } from '../store/actions';
+import { UserActions } from '../store/actions';
 
 function App() {
 
   const [loading, setLoading] = useState(true)
 
-  const token = store.getState().userReducer.token
+  const token =window.localStorage.token// store.getState().userReducer.token
 
   useEffect(() => {
     AuthService.status(token).then((result) => {
-      store.dispatch({ type: LOGIN, data: { 
-        token: token,
-        profile: result.user
-      } })
+      store.dispatch(UserActions.login(result.user))
     }).catch(e => {
       // NotificationManager.warn(e.message)
     }).finally(() => {

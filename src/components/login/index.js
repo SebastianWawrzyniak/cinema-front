@@ -1,5 +1,5 @@
-import React from 'react';
-
+import React, {useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import { Button, Card, Input } from '@material-ui/core'
 import styles from './style.js';
 import AuthService from '../../services/auth'
@@ -15,30 +15,17 @@ import {
   Redirect
 } from "react-router-dom";
 
+import { userSelectors } from '../../store/selectors'
+import { UserActions } from '../../store/actions'
 
-export default class Login extends React.Component {
+export const Login = () => {
 
-    constructor(props) {
-      super(props)
-  
-      this.state = {
-        login: '',
-        password: '',
-        loggedIn: false
-      }
-    }
+    const [email, setEmail] = useState('') //mozna tez react.useState
+    const [password, setPassword] = useState('')
+    const dispatch = useDispatch()
+    const user = useSelector(userSelectors.getUser)
 
-    componentDidMount() {
-
-    }
-
-    componentWillUnmount() {
-
-    }
-  
-    login() {
-
-        const { email, password } = this.state
+    const login = () => {
 
         if (!validateEmail(email)) {
           NotificationManager.warning('Niepoprawny email')
@@ -51,23 +38,17 @@ export default class Login extends React.Component {
 
         AuthService.login(email, password).then(res => {
           // redirect to Cinema and @TODO change localstorage with redux
-          window.localStorage.token = res.token
-          window.localStorage.user = email
-          this.setState({
-            loggedIn: true
-          })
+          dispatch(UserActions.login(res.data))
+         window.localStorage.token= res.token
           NotificationManager.success('Pomyslnie zalogowano');
         }).catch(e => {
           NotificationManager.error(e.message, 'Blad requestu');
         })
     }
 
-    
-    
-    
-    render() {
+console.log ('kaktus', user)
 
-    if (this.state.loggedIn) return <Redirect to={'/'}/>
+    if (user.token) return <Redirect to={'/'}/>
 
       const title = () => <div style={styles.div02}>
                    
@@ -90,16 +71,16 @@ export default class Login extends React.Component {
                <hr/>
                <Link to="/register">Zarejestruj się ! </Link>
                  
-                <Input value={this.state.email} style={{
+                <Input value={email} style={{
                     marginBottom: 10
-                }} onChange={(e) => this.setState({ email: e.target.value })} placeholder='Login'/>
+                }} onChange={(e) => setEmail(e.target.value)} placeholder='Login'/>
                  
                
-                <Input value={this.state.password} onChange={(e) => this.setState({ password: e.target.value })} placeholder='Password' type="password" />
+                <Input value={password} onChange={(e) => setPassword( e.target.value)} placeholder='Password' type="password" />
                 <Button style={{
                     marginTop:20,
                      
-                }}  variant='contained' color='primary' onClick={() => this.login()}>Zaloguj sie</Button>
+                }}  variant='contained' color='primary' onClick={() => login()}>Zaloguj sie</Button>
                 
               
             </Card>  
@@ -108,6 +89,6 @@ export default class Login extends React.Component {
                 
       )
     }
-  }
+  
     
   
