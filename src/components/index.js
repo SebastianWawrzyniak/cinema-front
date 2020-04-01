@@ -31,7 +31,7 @@ function App() {
     AuthService.status(token).then((result) => {
       store.dispatch(UserActions.login(result.user))
     }).catch(e => {
-      // NotificationManager.warn(e.message)
+      //NotificationManager.warn(e.message)
     }).finally(() => {
       setLoading(false)
     })

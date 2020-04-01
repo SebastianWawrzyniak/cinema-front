@@ -1,6 +1,8 @@
 import colors from '../../constants/colors'
 
 import backgroundImage from '../../assets/background.jpg'
+import color from '@material-ui/core/colors/amber'
+import { FilterNone } from '@material-ui/icons'
 export default
  {
     cardContainer: {
@@ -10,7 +12,8 @@ export default
         display: 'flex',
         flexDirection: "column",
         justifyContent: 'center',
-        padding: 30
+        padding: 30,
+       
     },
     div01: {
         width: '100%',
@@ -22,6 +25,7 @@ export default
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
+        
     },
     div02: { 
         marginBottom: 40,
@@ -36,6 +40,15 @@ export default
         flexDirection: "column",
         justifyContent: 'center',
         // padding: 30
+    },
+    rejestracja: {
+        marginBottom: 40,
+        textAlign: 'center',
+        fontSize: 24,
+        textDecoration: 'none',
+    
+
+
     }
 }
 

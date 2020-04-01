@@ -39,7 +39,7 @@ export const Login = () => {
         AuthService.login(email, password).then(res => {
           // redirect to Cinema and @TODO change localstorage with redux
           dispatch(UserActions.login(res.data))
-         window.localStorage.token= res.token
+         window.localStorage.token= res.data.token
           NotificationManager.success('Pomyslnie zalogowano');
         }).catch(e => {
           NotificationManager.error(e.message, 'Blad requestu');
@@ -66,11 +66,11 @@ console.log ('kaktus', user)
         
 
             <Card style={styles.cardContainer}>
-                
+                <div style={styles.rejestracja}>
                {title()}
                <hr/>
-               <Link to="/register">Zarejestruj się ! </Link>
-                 
+               <Link style={{textDecoration: 'none'}} to="/register">Zarejestruj się ! </Link>
+               </div>
                 <Input value={email} style={{
                     marginBottom: 10
                 }} onChange={(e) => setEmail(e.target.value)} placeholder='Login'/>
